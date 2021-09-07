@@ -30,28 +30,36 @@ include macros.asm
 		; Espacio
 		ImprimirEspacio al
 		
-		mov ax, 63 			; Aquí la parte izquierda ya tiene 50 -> ax = 55
-		mov cl, 5			; La parte derecha ya tiene 10 		  -> cl = 10
-		div cl				; Se divide
+		mov si, 0
+		inicio:
+			xor ax, ax
+			xor dx, dx
+			
+			mov ax, lista1[0]
+			mov cl, 5
+			div cl
+			
+			cmp ah, 0
+			jne validacionIncorrecta
+			
+			ImprimirCadena divisible
+			
+			ImprimirEspacio al
+			regreso:
+			add si, 1
+			cmp si, 10
+		jne inicio
+		jmp noEncila
 		
-		; Imprimir ah
-		ImprimirEspacio al
-		cmp ah, 0					;  si ah no es igual a 0
-		jne validacionInorrecta		; salta a validacionInorrecta
+		validacionIncorrecta:
+			ImprimirCadena noDivisible
+			ImprimirEspacio al
+			jmp regreso
 		
-		ImprimirCadena divisible	; de lo contrario sigue el flujo normal
-		ImprimirEspacio al
-	
+		noEncila:
 		ImprimirCadena lineas
-		
 		; ax = 4C00H -> 
 		mov ax, 4C00H
 		INT 21H
 	main endp
-	
-	validacionInorrecta:
-		ImprimirCadena noDivisible
-		ImprimirEspacio al
-		mov ax, 4C00H
-		INT 21H
 end
